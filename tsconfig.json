@@ -6,7 +6,9 @@
     "lib": [
       "es2022"
     ],
-    "declaration": true,
+    "declaration": false,
+    "noEmit": true,
+    "isolatedModules": true,
     "strict": true,
     "noImplicitAny": true,
     "strictNullChecks": true,

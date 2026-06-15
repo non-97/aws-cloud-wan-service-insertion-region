@@ -1,20 +1,27 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib/core';
-import { AwsCloudWanServiceInsertionRegionStack } from '../lib/aws-cloud-wan-service-insertion-region-stack';
+import { CORE_STACK_REGION, REGION_CONFIGS } from '../lib/config';
+import { CoreStack } from '../lib/core-stack';
+import { RegionStack } from '../lib/region-stack';
 
 const app = new cdk.App();
-new AwsCloudWanServiceInsertionRegionStack(app, 'AwsCloudWanServiceInsertionRegionStack', {
-  /* If you don't specify 'env', this stack will be environment-agnostic.
-   * Account/Region-dependent features and context lookups will not work,
-   * but a single synthesized template can be deployed anywhere. */
+const account = process.env.CDK_DEFAULT_ACCOUNT;
 
-  /* Uncomment the next line to specialize this stack for the AWS Account
-   * and Region that are implied by the current CLI configuration. */
-  // env: { account: process.env.CDK_DEFAULT_ACCOUNT, region: process.env.CDK_DEFAULT_REGION },
-
-  /* Uncomment the next line if you know exactly what Account and Region you
-   * want to deploy the stack to. */
-  // env: { account: '123456789012', region: 'us-east-1' },
-
-  /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
+// Cloud WAN の中核 (Global Network / Core Network / Policy)
+const coreStack = new CoreStack(app, 'ServiceInsertionCoreStack', {
+  env: { account, region: CORE_STACK_REGION },
+  crossRegionReferences: true,
 });
+
+// 各リージョンの Workload / Inspection VPC
+for (const regionConfig of REGION_CONFIGS) {
+  const regionStack = new RegionStack(app, `ServiceInsertionRegionStack-${regionConfig.region}`, {
+    env: { account, region: regionConfig.region },
+    regionConfig,
+    coreNetworkId: coreStack.coreNetworkId,
+    coreNetworkArn: coreStack.coreNetworkArn,
+    crossRegionReferences: true,
+  });
+  // Core Network / Policy が先に存在している必要がある
+  regionStack.addDependency(coreStack);
+}

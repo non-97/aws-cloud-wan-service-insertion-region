@@ -1,0 +1,3346 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CoreStack スナップショット 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+  },
+  "Resources": {
+    "CoreNetwork": {
+      "Properties": {
+        "Description": "Service Insertion verification core network",
+        "GlobalNetworkId": {
+          "Fn::GetAtt": [
+            "GlobalNetwork",
+            "Id",
+          ],
+        },
+        "PolicyDocument": {
+          "attachment-policies": [
+            {
+              "action": {
+                "association-method": "constant",
+                "segment": "workload",
+              },
+              "condition-logic": "or",
+              "conditions": [
+                {
+                  "key": "cloudwan-seg",
+                  "operator": "equals",
+                  "type": "tag-value",
+                  "value": "workload",
+                },
+              ],
+              "description": "attach workload segment by tag",
+              "rule-number": 100,
+            },
+            {
+              "action": {
+                "add-to-network-function-group": "inspection",
+              },
+              "condition-logic": "or",
+              "conditions": [
+                {
+                  "key": "cloudwan-nfg",
+                  "operator": "equals",
+                  "type": "tag-value",
+                  "value": "inspection",
+                },
+              ],
+              "description": "add to inspection NFG by tag",
+              "rule-number": 200,
+            },
+          ],
+          "core-network-configuration": {
+            "asn-ranges": [
+              "64512-64555",
+            ],
+            "edge-locations": [
+              {
+                "asn": 64512,
+                "location": "us-east-1",
+              },
+              {
+                "asn": 64513,
+                "location": "us-west-2",
+              },
+              {
+                "asn": 64514,
+                "location": "ap-northeast-1",
+              },
+              {
+                "asn": 64515,
+                "location": "ap-northeast-3",
+              },
+              {
+                "asn": 64516,
+                "location": "ap-southeast-1",
+              },
+            ],
+          },
+          "network-function-groups": [
+            {
+              "name": "inspection",
+              "require-attachment-acceptance": false,
+            },
+          ],
+          "segment-actions": [
+            {
+              "action": "send-to",
+              "segment": "workload",
+              "via": {
+                "network-function-groups": [
+                  "inspection",
+                ],
+              },
+            },
+            {
+              "action": "send-via",
+              "mode": "single-hop",
+              "segment": "workload",
+              "via": {
+                "network-function-groups": [
+                  "inspection",
+                ],
+              },
+              "when-sent-to": {
+                "segments": [
+                  "workload",
+                ],
+              },
+            },
+          ],
+          "segments": [
+            {
+              "edge-locations": [
+                "us-east-1",
+                "us-west-2",
+                "ap-northeast-1",
+                "ap-northeast-3",
+                "ap-southeast-1",
+              ],
+              "isolate-attachments": false,
+              "name": "workload",
+              "require-attachment-acceptance": false,
+            },
+          ],
+          "version": "2025.11",
+        },
+      },
+      "Type": "AWS::NetworkManager::CoreNetwork",
+    },
+    "GlobalNetwork": {
+      "Properties": {
+        "Description": "Service Insertion verification global network",
+      },
+      "Type": "AWS::NetworkManager::GlobalNetwork",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`RegionStack スナップショット (ap-northeast-1) 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "InspectionVpc238DD311": {
+      "Properties": {
+        "CidrBlock": "10.20.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "InspectionVpcCloudWanAttachment56DF0FB9": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "Options": {
+          "ApplianceModeSupport": true,
+        },
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:ap-northeast-1:123456789012:subnet/",
+                {
+                  "Ref": "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-nfg",
+            "Value": "inspection",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:ap-northeast-1:123456789012:vpc/",
+              {
+                "Ref": "InspectionVpc238DD311",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTableAssociationBB9C64F5": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.20.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcCloudWanSubnetDefaultRoute6A4B8BDE": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1DefaultRoute113A3881": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "InspectionVpcPublicSubnet1NATGateway99836142",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1RouteTable9EFA3188": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcFirewallSubnet1RouteTableAssociation2C22DD2F": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcFirewallSubnet1Subnet3F8A5C7F": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.20.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Firewall",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcFwSubnetInternalRouteB2E83FC5": {
+      "DependsOn": [
+        "InspectionVpcCloudWanAttachment56DF0FB9",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcIGW5350D1B3": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "InspectionVpcNfw43B85300": {
+      "Properties": {
+        "FirewallName": "ReginVpc6F21E806-Nfw",
+        "FirewallPolicyArn": {
+          "Fn::GetAtt": [
+            "InspectionVpcNfwPolicy00DBED60",
+            "FirewallPolicyArn",
+          ],
+        },
+        "SubnetMappings": [
+          {
+            "SubnetId": {
+              "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+            },
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::NetworkFirewall::Firewall",
+    },
+    "InspectionVpcNfwAlertLogGroupE2FBDE47": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwFlowLogGroupE2AF9856": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwLogging88E96DDF": {
+      "Properties": {
+        "FirewallArn": {
+          "Ref": "InspectionVpcNfw43B85300",
+        },
+        "LoggingConfiguration": {
+          "LogDestinationConfigs": [
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwAlertLogGroupE2FBDE47",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "ALERT",
+            },
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwFlowLogGroupE2AF9856",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "FLOW",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::NetworkFirewall::LoggingConfiguration",
+    },
+    "InspectionVpcNfwPolicy00DBED60": {
+      "Properties": {
+        "FirewallPolicy": {
+          "StatefulDefaultActions": [
+            "aws:drop_established",
+          ],
+          "StatefulEngineOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+          "StatefulRuleGroupReferences": [
+            {
+              "Priority": 1,
+              "ResourceArn": {
+                "Fn::GetAtt": [
+                  "InspectionVpcNfwRuleGroup57E7C302",
+                  "RuleGroupArn",
+                ],
+              },
+            },
+          ],
+          "StatelessDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+          "StatelessFragmentDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+        },
+        "FirewallPolicyName": "ReginVpc6F21E806-Policy",
+      },
+      "Type": "AWS::NetworkFirewall::FirewallPolicy",
+    },
+    "InspectionVpcNfwRuleGroup57E7C302": {
+      "Properties": {
+        "Capacity": 100,
+        "RuleGroup": {
+          "RulesSource": {
+            "RulesString": "pass icmp any any -> any any (alert; sid:2000001; rev:1; msg:"INSPECTED at ap-northeast-1 - ICMP";)
+pass tls any any -> any any (ssl_state:client_hello; flow:to_server,established; alert; sid:2000002; rev:1; msg:"INSPECTED at ap-northeast-1 - TLS";)
+pass tcp any any -> any any (flow:not_established; sid:3000001; rev:1;)
+pass tcp any any -> any any (flow:established; sid:3000002; rev:1;)
+pass udp any any -> any any (sid:3000003; rev:1;)
+",
+          },
+          "StatefulRuleOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+        },
+        "RuleGroupName": "ReginVpc6F21E806-RuleGroup",
+        "Type": "STATEFUL",
+      },
+      "Type": "AWS::NetworkFirewall::RuleGroup",
+    },
+    "InspectionVpcPublicSubnet1DefaultRoute898F5337": {
+      "DependsOn": [
+        "InspectionVpcVPCGW92D92FBC",
+      ],
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcPublicSubnet1EIP3DC9AA64": {
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "InspectionVpcPublicSubnet1NATGateway99836142": {
+      "DependsOn": [
+        "InspectionVpcPublicSubnet1DefaultRoute898F5337",
+        "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2",
+      ],
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "InspectionVpcPublicSubnet1EIP3DC9AA64",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "InspectionVpcPublicSubnet1RouteTable1AE145F5": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcPublicSubnet1Subnet30F50A30": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.20.2.0/24",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcPublicSubnetInternalRouteAB86FAA3": {
+      "Properties": {
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcVPCGW92D92FBC": {
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "WorkloadVpc55BAE090": {
+      "Properties": {
+        "CidrBlock": "10.21.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "WorkloadVpcCloudWanAttachment5889ECE6": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:ap-northeast-1:123456789012:subnet/",
+                {
+                  "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-seg",
+            "Value": "workload",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:ap-northeast-1:123456789012:vpc/",
+              {
+                "Ref": "WorkloadVpc55BAE090",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTableAssociation671C0D87": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.21.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcEc2Sg90E68540": {
+      "Properties": {
+        "GroupDescription": "for workload test EC2",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/8",
+            "Description": "from 10.0.0.0/8:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "172.16.0.0/12",
+            "Description": "from 172.16.0.0/12:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "192.168.0.0/16",
+            "Description": "from 192.168.0.0/16:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcEicEndpoint29CD2D61": {
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEicSgD56D0C61",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::InstanceConnectEndpoint",
+    },
+    "WorkloadVpcEicSgD56D0C61": {
+      "Properties": {
+        "GroupDescription": "for EIC Endpoint",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "10.21.0.0/16",
+            "Description": "from 10.21.0.0/16:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcInstanceDFD41F5C": {
+      "DependsOn": [
+        "WorkloadVpcInstanceInstanceRole8A8EFE50",
+      ],
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "IamInstanceProfile": {
+          "Ref": "WorkloadVpcInstanceInstanceProfile4AF6DB06",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEc2Sg90E68540",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Instance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash",
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "WorkloadVpcInstanceInstanceProfile4AF6DB06": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "WorkloadVpcInstanceInstanceRole8A8EFE50",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "WorkloadVpcInstanceInstanceRole8A8EFE50": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTable1750F684": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTableAssociation41FB2777": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.21.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Workload",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcWorkloadSubnetDefaultRoute20F70AA5": {
+      "DependsOn": [
+        "WorkloadVpcCloudWanAttachment5889ECE6",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`RegionStack スナップショット (ap-northeast-3) 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "InspectionVpc238DD311": {
+      "Properties": {
+        "CidrBlock": "10.30.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "InspectionVpcCloudWanAttachment56DF0FB9": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "Options": {
+          "ApplianceModeSupport": true,
+        },
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:ap-northeast-3:123456789012:subnet/",
+                {
+                  "Ref": "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-nfg",
+            "Value": "inspection",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:ap-northeast-3:123456789012:vpc/",
+              {
+                "Ref": "InspectionVpc238DD311",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTableAssociationBB9C64F5": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.30.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcCloudWanSubnetDefaultRoute6A4B8BDE": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1DefaultRoute113A3881": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "InspectionVpcPublicSubnet1NATGateway99836142",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1RouteTable9EFA3188": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcFirewallSubnet1RouteTableAssociation2C22DD2F": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcFirewallSubnet1Subnet3F8A5C7F": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.30.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Firewall",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcFwSubnetInternalRouteB2E83FC5": {
+      "DependsOn": [
+        "InspectionVpcCloudWanAttachment56DF0FB9",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcIGW5350D1B3": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "InspectionVpcNfw43B85300": {
+      "Properties": {
+        "FirewallName": "ReginVpcC4974E7D-Nfw",
+        "FirewallPolicyArn": {
+          "Fn::GetAtt": [
+            "InspectionVpcNfwPolicy00DBED60",
+            "FirewallPolicyArn",
+          ],
+        },
+        "SubnetMappings": [
+          {
+            "SubnetId": {
+              "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+            },
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::NetworkFirewall::Firewall",
+    },
+    "InspectionVpcNfwAlertLogGroupE2FBDE47": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwFlowLogGroupE2AF9856": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwLogging88E96DDF": {
+      "Properties": {
+        "FirewallArn": {
+          "Ref": "InspectionVpcNfw43B85300",
+        },
+        "LoggingConfiguration": {
+          "LogDestinationConfigs": [
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwAlertLogGroupE2FBDE47",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "ALERT",
+            },
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwFlowLogGroupE2AF9856",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "FLOW",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::NetworkFirewall::LoggingConfiguration",
+    },
+    "InspectionVpcNfwPolicy00DBED60": {
+      "Properties": {
+        "FirewallPolicy": {
+          "StatefulDefaultActions": [
+            "aws:drop_established",
+          ],
+          "StatefulEngineOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+          "StatefulRuleGroupReferences": [
+            {
+              "Priority": 1,
+              "ResourceArn": {
+                "Fn::GetAtt": [
+                  "InspectionVpcNfwRuleGroup57E7C302",
+                  "RuleGroupArn",
+                ],
+              },
+            },
+          ],
+          "StatelessDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+          "StatelessFragmentDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+        },
+        "FirewallPolicyName": "ReginVpcC4974E7D-Policy",
+      },
+      "Type": "AWS::NetworkFirewall::FirewallPolicy",
+    },
+    "InspectionVpcNfwRuleGroup57E7C302": {
+      "Properties": {
+        "Capacity": 100,
+        "RuleGroup": {
+          "RulesSource": {
+            "RulesString": "pass icmp any any -> any any (alert; sid:2000001; rev:1; msg:"INSPECTED at ap-northeast-3 - ICMP";)
+pass tls any any -> any any (ssl_state:client_hello; flow:to_server,established; alert; sid:2000002; rev:1; msg:"INSPECTED at ap-northeast-3 - TLS";)
+pass tcp any any -> any any (flow:not_established; sid:3000001; rev:1;)
+pass tcp any any -> any any (flow:established; sid:3000002; rev:1;)
+pass udp any any -> any any (sid:3000003; rev:1;)
+",
+          },
+          "StatefulRuleOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+        },
+        "RuleGroupName": "ReginVpcC4974E7D-RuleGroup",
+        "Type": "STATEFUL",
+      },
+      "Type": "AWS::NetworkFirewall::RuleGroup",
+    },
+    "InspectionVpcPublicSubnet1DefaultRoute898F5337": {
+      "DependsOn": [
+        "InspectionVpcVPCGW92D92FBC",
+      ],
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcPublicSubnet1EIP3DC9AA64": {
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "InspectionVpcPublicSubnet1NATGateway99836142": {
+      "DependsOn": [
+        "InspectionVpcPublicSubnet1DefaultRoute898F5337",
+        "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2",
+      ],
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "InspectionVpcPublicSubnet1EIP3DC9AA64",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "InspectionVpcPublicSubnet1RouteTable1AE145F5": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcPublicSubnet1Subnet30F50A30": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.30.2.0/24",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcPublicSubnetInternalRouteAB86FAA3": {
+      "Properties": {
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcVPCGW92D92FBC": {
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "WorkloadVpc55BAE090": {
+      "Properties": {
+        "CidrBlock": "10.31.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "WorkloadVpcCloudWanAttachment5889ECE6": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:ap-northeast-3:123456789012:subnet/",
+                {
+                  "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-seg",
+            "Value": "workload",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:ap-northeast-3:123456789012:vpc/",
+              {
+                "Ref": "WorkloadVpc55BAE090",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTableAssociation671C0D87": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.31.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcEc2Sg90E68540": {
+      "Properties": {
+        "GroupDescription": "for workload test EC2",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/8",
+            "Description": "from 10.0.0.0/8:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "172.16.0.0/12",
+            "Description": "from 172.16.0.0/12:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "192.168.0.0/16",
+            "Description": "from 192.168.0.0/16:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcEicEndpoint29CD2D61": {
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEicSgD56D0C61",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::InstanceConnectEndpoint",
+    },
+    "WorkloadVpcEicSgD56D0C61": {
+      "Properties": {
+        "GroupDescription": "for EIC Endpoint",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "10.31.0.0/16",
+            "Description": "from 10.31.0.0/16:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcInstanceDFD41F5C": {
+      "DependsOn": [
+        "WorkloadVpcInstanceInstanceRole8A8EFE50",
+      ],
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "IamInstanceProfile": {
+          "Ref": "WorkloadVpcInstanceInstanceProfile4AF6DB06",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEc2Sg90E68540",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Instance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash",
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "WorkloadVpcInstanceInstanceProfile4AF6DB06": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "WorkloadVpcInstanceInstanceRole8A8EFE50",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "WorkloadVpcInstanceInstanceRole8A8EFE50": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTable1750F684": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTableAssociation41FB2777": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.31.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Workload",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-northeast-3/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcWorkloadSubnetDefaultRoute20F70AA5": {
+      "DependsOn": [
+        "WorkloadVpcCloudWanAttachment5889ECE6",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`RegionStack スナップショット (ap-southeast-1) 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "WorkloadVpc55BAE090": {
+      "Properties": {
+        "CidrBlock": "10.41.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "WorkloadVpcCloudWanAttachment5889ECE6": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:ap-southeast-1:123456789012:subnet/",
+                {
+                  "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-seg",
+            "Value": "workload",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:ap-southeast-1:123456789012:vpc/",
+              {
+                "Ref": "WorkloadVpc55BAE090",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTableAssociation671C0D87": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.41.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcEc2Sg90E68540": {
+      "Properties": {
+        "GroupDescription": "for workload test EC2",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/8",
+            "Description": "from 10.0.0.0/8:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "172.16.0.0/12",
+            "Description": "from 172.16.0.0/12:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "192.168.0.0/16",
+            "Description": "from 192.168.0.0/16:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcEicEndpoint29CD2D61": {
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEicSgD56D0C61",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::InstanceConnectEndpoint",
+    },
+    "WorkloadVpcEicSgD56D0C61": {
+      "Properties": {
+        "GroupDescription": "for EIC Endpoint",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "10.41.0.0/16",
+            "Description": "from 10.41.0.0/16:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcInstanceDFD41F5C": {
+      "DependsOn": [
+        "WorkloadVpcInstanceInstanceRole8A8EFE50",
+      ],
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "IamInstanceProfile": {
+          "Ref": "WorkloadVpcInstanceInstanceProfile4AF6DB06",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEc2Sg90E68540",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Instance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash",
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "WorkloadVpcInstanceInstanceProfile4AF6DB06": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "WorkloadVpcInstanceInstanceRole8A8EFE50",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "WorkloadVpcInstanceInstanceRole8A8EFE50": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTable1750F684": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTableAssociation41FB2777": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.41.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Workload",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-ap-southeast-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcWorkloadSubnetDefaultRoute20F70AA5": {
+      "DependsOn": [
+        "WorkloadVpcCloudWanAttachment5889ECE6",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`RegionStack スナップショット (us-east-1) 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "InspectionVpc238DD311": {
+      "Properties": {
+        "CidrBlock": "10.0.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1RouteTableAssociationBB9C64F5": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcCloudWanAttachmentSubnet1Subnet17021756": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcCloudWanSubnetDefaultRoute6A4B8BDE": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "InspectionVpcCloudWanAttachmentSubnet1RouteTable97027789",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1DefaultRoute113A3881": {
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "NatGatewayId": {
+          "Ref": "InspectionVpcPublicSubnet1NATGateway99836142",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcFirewallSubnet1RouteTable9EFA3188": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcFirewallSubnet1RouteTableAssociation2C22DD2F": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcFirewallSubnet1RouteTable9EFA3188",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcFirewallSubnet1Subnet3F8A5C7F": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Firewall",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Private",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/FirewallSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcIGW5350D1B3": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::InternetGateway",
+    },
+    "InspectionVpcNfw43B85300": {
+      "Properties": {
+        "FirewallName": "ReginVpcAF1CE84E-Nfw",
+        "FirewallPolicyArn": {
+          "Fn::GetAtt": [
+            "InspectionVpcNfwPolicy00DBED60",
+            "FirewallPolicyArn",
+          ],
+        },
+        "SubnetMappings": [
+          {
+            "SubnetId": {
+              "Ref": "InspectionVpcFirewallSubnet1Subnet3F8A5C7F",
+            },
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::NetworkFirewall::Firewall",
+    },
+    "InspectionVpcNfwAlertLogGroupE2FBDE47": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwFlowLogGroupE2AF9856": {
+      "DeletionPolicy": "Delete",
+      "Properties": {
+        "RetentionInDays": 7,
+      },
+      "Type": "AWS::Logs::LogGroup",
+      "UpdateReplacePolicy": "Delete",
+    },
+    "InspectionVpcNfwLogging88E96DDF": {
+      "Properties": {
+        "FirewallArn": {
+          "Ref": "InspectionVpcNfw43B85300",
+        },
+        "LoggingConfiguration": {
+          "LogDestinationConfigs": [
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwAlertLogGroupE2FBDE47",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "ALERT",
+            },
+            {
+              "LogDestination": {
+                "logGroup": {
+                  "Ref": "InspectionVpcNfwFlowLogGroupE2AF9856",
+                },
+              },
+              "LogDestinationType": "CloudWatchLogs",
+              "LogType": "FLOW",
+            },
+          ],
+        },
+      },
+      "Type": "AWS::NetworkFirewall::LoggingConfiguration",
+    },
+    "InspectionVpcNfwPolicy00DBED60": {
+      "Properties": {
+        "FirewallPolicy": {
+          "StatefulDefaultActions": [
+            "aws:drop_established",
+          ],
+          "StatefulEngineOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+          "StatefulRuleGroupReferences": [
+            {
+              "Priority": 1,
+              "ResourceArn": {
+                "Fn::GetAtt": [
+                  "InspectionVpcNfwRuleGroup57E7C302",
+                  "RuleGroupArn",
+                ],
+              },
+            },
+          ],
+          "StatelessDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+          "StatelessFragmentDefaultActions": [
+            "aws:forward_to_sfe",
+          ],
+        },
+        "FirewallPolicyName": "ReginVpcAF1CE84E-Policy",
+      },
+      "Type": "AWS::NetworkFirewall::FirewallPolicy",
+    },
+    "InspectionVpcNfwRuleGroup57E7C302": {
+      "Properties": {
+        "Capacity": 100,
+        "RuleGroup": {
+          "RulesSource": {
+            "RulesString": "pass icmp any any -> any any (alert; sid:2000001; rev:1; msg:"INSPECTED at us-east-1 - ICMP";)
+pass tls any any -> any any (ssl_state:client_hello; flow:to_server,established; alert; sid:2000002; rev:1; msg:"INSPECTED at us-east-1 - TLS";)
+pass tcp any any -> any any (flow:not_established; sid:3000001; rev:1;)
+pass tcp any any -> any any (flow:established; sid:3000002; rev:1;)
+pass udp any any -> any any (sid:3000003; rev:1;)
+",
+          },
+          "StatefulRuleOptions": {
+            "RuleOrder": "STRICT_ORDER",
+          },
+        },
+        "RuleGroupName": "ReginVpcAF1CE84E-RuleGroup",
+        "Type": "STATEFUL",
+      },
+      "Type": "AWS::NetworkFirewall::RuleGroup",
+    },
+    "InspectionVpcPublicSubnet1DefaultRoute898F5337": {
+      "DependsOn": [
+        "InspectionVpcVPCGW92D92FBC",
+      ],
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcPublicSubnet1EIP3DC9AA64": {
+      "Properties": {
+        "Domain": "vpc",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::EIP",
+    },
+    "InspectionVpcPublicSubnet1NATGateway99836142": {
+      "DependsOn": [
+        "InspectionVpcPublicSubnet1DefaultRoute898F5337",
+        "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2",
+      ],
+      "Properties": {
+        "AllocationId": {
+          "Fn::GetAtt": [
+            "InspectionVpcPublicSubnet1EIP3DC9AA64",
+            "AllocationId",
+          ],
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::NatGateway",
+    },
+    "InspectionVpcPublicSubnet1RouteTable1AE145F5": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "InspectionVpcPublicSubnet1RouteTableAssociation499BA3E2": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "SubnetId": {
+          "Ref": "InspectionVpcPublicSubnet1Subnet30F50A30",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "InspectionVpcPublicSubnet1Subnet30F50A30": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.0.2.0/24",
+        "MapPublicIpOnLaunch": true,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Public",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Public",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/InspectionVpc/Vpc/PublicSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "InspectionVpcPublicSubnetInternalRouteAB86FAA3": {
+      "Properties": {
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "RouteTableId": {
+          "Ref": "InspectionVpcPublicSubnet1RouteTable1AE145F5",
+        },
+        "VpcEndpointId": {
+          "Fn::Select": [
+            1,
+            {
+              "Fn::Split": [
+                ":",
+                {
+                  "Fn::Join": [
+                    ",",
+                    {
+                      "Fn::GetAtt": [
+                        "InspectionVpcNfw43B85300",
+                        "EndpointIds",
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+    "InspectionVpcVPCGW92D92FBC": {
+      "Properties": {
+        "InternetGatewayId": {
+          "Ref": "InspectionVpcIGW5350D1B3",
+        },
+        "VpcId": {
+          "Ref": "InspectionVpc238DD311",
+        },
+      },
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+    },
+    "WorkloadVpc55BAE090": {
+      "Properties": {
+        "CidrBlock": "10.1.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "WorkloadVpcCloudWanAttachment5889ECE6": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:us-east-1:123456789012:subnet/",
+                {
+                  "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-seg",
+            "Value": "workload",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:us-east-1:123456789012:vpc/",
+              {
+                "Ref": "WorkloadVpc55BAE090",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTableAssociation671C0D87": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.1.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcEc2Sg90E68540": {
+      "Properties": {
+        "GroupDescription": "for workload test EC2",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/8",
+            "Description": "from 10.0.0.0/8:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "172.16.0.0/12",
+            "Description": "from 172.16.0.0/12:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "192.168.0.0/16",
+            "Description": "from 192.168.0.0/16:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcEicEndpoint29CD2D61": {
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEicSgD56D0C61",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::InstanceConnectEndpoint",
+    },
+    "WorkloadVpcEicSgD56D0C61": {
+      "Properties": {
+        "GroupDescription": "for EIC Endpoint",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "10.1.0.0/16",
+            "Description": "from 10.1.0.0/16:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcInstanceDFD41F5C": {
+      "DependsOn": [
+        "WorkloadVpcInstanceInstanceRole8A8EFE50",
+      ],
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "IamInstanceProfile": {
+          "Ref": "WorkloadVpcInstanceInstanceProfile4AF6DB06",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEc2Sg90E68540",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Instance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash",
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "WorkloadVpcInstanceInstanceProfile4AF6DB06": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "WorkloadVpcInstanceInstanceRole8A8EFE50",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "WorkloadVpcInstanceInstanceRole8A8EFE50": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTable1750F684": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTableAssociation41FB2777": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.1.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Workload",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-east-1/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcWorkloadSubnetDefaultRoute20F70AA5": {
+      "DependsOn": [
+        "WorkloadVpcCloudWanAttachment5889ECE6",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`RegionStack スナップショット (us-west-2) 1`] = `
+{
+  "Parameters": {
+    "BootstrapVersion": {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
+    },
+    "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter": {
+      "Default": "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-6.1-x86_64",
+      "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+    },
+  },
+  "Resources": {
+    "WorkloadVpc55BAE090": {
+      "Properties": {
+        "CidrBlock": "10.11.0.0/16",
+        "EnableDnsHostnames": true,
+        "EnableDnsSupport": true,
+        "InstanceTenancy": "default",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Vpc",
+          },
+        ],
+      },
+      "Type": "AWS::EC2::VPC",
+    },
+    "WorkloadVpcCloudWanAttachment5889ECE6": {
+      "Properties": {
+        "CoreNetworkId": "core-network-0123456789abcdef",
+        "SubnetArns": [
+          {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition",
+                },
+                ":ec2:us-west-2:123456789012:subnet/",
+                {
+                  "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+                },
+              ],
+            ],
+          },
+        ],
+        "Tags": [
+          {
+            "Key": "cloudwan-seg",
+            "Value": "workload",
+          },
+        ],
+        "VpcArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition",
+              },
+              ":ec2:us-west-2:123456789012:vpc/",
+              {
+                "Ref": "WorkloadVpc55BAE090",
+              },
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::NetworkManager::VpcAttachment",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1RouteTableAssociation671C0D87": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1RouteTable3C09FFF6",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcCloudWanAttachmentSubnet1Subnet02E22A50": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.11.1.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "CloudWanAttachment",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Vpc/CloudWanAttachmentSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcEc2Sg90E68540": {
+      "Properties": {
+        "GroupDescription": "for workload test EC2",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "0.0.0.0/0",
+            "Description": "Allow all outbound traffic by default",
+            "IpProtocol": "-1",
+          },
+        ],
+        "SecurityGroupIngress": [
+          {
+            "CidrIp": "10.0.0.0/8",
+            "Description": "from 10.0.0.0/8:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "172.16.0.0/12",
+            "Description": "from 172.16.0.0/12:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+          {
+            "CidrIp": "192.168.0.0/16",
+            "Description": "from 192.168.0.0/16:ALL TRAFFIC",
+            "IpProtocol": "-1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcEicEndpoint29CD2D61": {
+      "Properties": {
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEicSgD56D0C61",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::InstanceConnectEndpoint",
+    },
+    "WorkloadVpcEicSgD56D0C61": {
+      "Properties": {
+        "GroupDescription": "for EIC Endpoint",
+        "SecurityGroupEgress": [
+          {
+            "CidrIp": "10.11.0.0/16",
+            "Description": "from 10.11.0.0/16:22",
+            "FromPort": 22,
+            "IpProtocol": "tcp",
+            "ToPort": 22,
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::SecurityGroup",
+    },
+    "WorkloadVpcInstanceDFD41F5C": {
+      "DependsOn": [
+        "WorkloadVpcInstanceInstanceRole8A8EFE50",
+      ],
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "IamInstanceProfile": {
+          "Ref": "WorkloadVpcInstanceInstanceProfile4AF6DB06",
+        },
+        "ImageId": {
+          "Ref": "SsmParameterValueawsserviceamiamazonlinuxlatestal2023amikernel61x8664C96584B6F00A464EAD1953AFF4B05118Parameter",
+        },
+        "InstanceType": "t3.micro",
+        "SecurityGroupIds": [
+          {
+            "Fn::GetAtt": [
+              "WorkloadVpcEc2Sg90E68540",
+              "GroupId",
+            ],
+          },
+        ],
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Instance",
+          },
+        ],
+        "UserData": {
+          "Fn::Base64": "#!/bin/bash",
+        },
+      },
+      "Type": "AWS::EC2::Instance",
+    },
+    "WorkloadVpcInstanceInstanceProfile4AF6DB06": {
+      "Properties": {
+        "Roles": [
+          {
+            "Ref": "WorkloadVpcInstanceInstanceRole8A8EFE50",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::InstanceProfile",
+    },
+    "WorkloadVpcInstanceInstanceRole8A8EFE50": {
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Instance",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTable1750F684": {
+      "Properties": {
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::RouteTable",
+    },
+    "WorkloadVpcWorkloadSubnet1RouteTableAssociation41FB2777": {
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+        "SubnetId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC",
+        },
+      },
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+    },
+    "WorkloadVpcWorkloadSubnet1Subnet6E5D45CC": {
+      "Properties": {
+        "AvailabilityZone": "dummy1a",
+        "CidrBlock": "10.11.0.0/24",
+        "MapPublicIpOnLaunch": false,
+        "Tags": [
+          {
+            "Key": "aws-cdk:subnet-name",
+            "Value": "Workload",
+          },
+          {
+            "Key": "aws-cdk:subnet-type",
+            "Value": "Isolated",
+          },
+          {
+            "Key": "Name",
+            "Value": "RegionStack-us-west-2/WorkloadVpc/Vpc/WorkloadSubnet1",
+          },
+        ],
+        "VpcId": {
+          "Ref": "WorkloadVpc55BAE090",
+        },
+      },
+      "Type": "AWS::EC2::Subnet",
+    },
+    "WorkloadVpcWorkloadSubnetDefaultRoute20F70AA5": {
+      "DependsOn": [
+        "WorkloadVpcCloudWanAttachment5889ECE6",
+      ],
+      "Properties": {
+        "CoreNetworkArn": "arn:aws:networkmanager::123456789012:core-network/core-network-0123456789abcdef",
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "WorkloadVpcWorkloadSubnet1RouteTable1750F684",
+        },
+      },
+      "Type": "AWS::EC2::Route",
+    },
+  },
+  "Rules": {
+    "CheckBootstrapVersion": {
+      "Assertions": [
+        {
+          "Assert": {
+            "Fn::Not": [
+              {
+                "Fn::Contains": [
+                  [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
+    },
+  },
+}
+`;

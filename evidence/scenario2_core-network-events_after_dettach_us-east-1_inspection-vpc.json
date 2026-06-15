@@ -1,0 +1,207 @@
+{
+    "version": "0",
+    "id": "2d8ca9a1-d445-b2b5-379e-a3cd0a20b91f",
+    "detail-type": "AWS API Call via CloudTrail",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:45:48Z",
+    "region": "us-west-2",
+    "resources": [],
+    "detail": {
+        "eventVersion": "1.09",
+        "userIdentity": {
+            "type": "AssumedRole",
+            "principalId": "<プリンシパルID>:AWSCloudFormation",
+            "arn": "arn:aws:sts::<AWSアカウントID>:assumed-role/cdk-hnb659fds-cfn-exec-role-<AWSアカウントID>-us-east-1/AWSCloudFormation",
+            "accountId": "<AWSアカウントID>",
+            "accessKeyId": "<アクセスキー>",
+            "sessionContext": {
+                "sessionIssuer": {
+                    "type": "Role",
+                    "principalId": "<プリンシパルID>",
+                    "arn": "arn:aws:iam::<AWSアカウントID>:role/cdk-hnb659fds-cfn-exec-role-<AWSアカウントID>-us-east-1",
+                    "accountId": "<AWSアカウントID>",
+                    "userName": "cdk-hnb659fds-cfn-exec-role-<AWSアカウントID>-us-east-1"
+                },
+                "attributes": {
+                    "creationDate": "2026-06-15T04:45:47Z",
+                    "mfaAuthenticated": "false"
+                }
+            },
+            "invokedBy": "cloudformation.amazonaws.com"
+        },
+        "eventTime": "2026-06-15T04:45:48Z",
+        "eventSource": "networkmanager.amazonaws.com",
+        "eventName": "DeleteAttachment",
+        "awsRegion": "us-west-2",
+        "sourceIPAddress": "cloudformation.amazonaws.com",
+        "userAgent": "cloudformation.amazonaws.com",
+        "requestParameters": {
+            "attachmentId": "attachment-03448a70834da5ec2"
+        },
+        "responseElements": {
+            "Attachment": {
+                "AttachmentId": "attachment-03448a70834da5ec2",
+                "AttachmentPolicyRuleNumber": 200,
+                "AttachmentType": "VPC",
+                "CoreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31",
+                "CoreNetworkId": "core-network-03d07918f18f4ef31",
+                "CreatedAt": 1781495882,
+                "EdgeLocation": "us-east-1",
+                "NetworkFunctionGroupName": "inspection",
+                "OwnerAccountId": "<AWSアカウントID>",
+                "ResourceArn": "arn:aws:ec2:us-east-1:<AWSアカウントID>:vpc/vpc-0f4a5b2a1386863a2",
+                "State": "DELETING",
+                "UpdatedAt": 1781498748
+            }
+        },
+        "requestID": "61a51a15-c2cf-4292-9dd1-7bef0a3b62ae",
+        "eventID": "cb02d492-f3d9-46ef-8341-c3618f1ac0a1",
+        "readOnly": false,
+        "eventType": "AwsApiCall",
+        "managementEvent": true,
+        "recipientAccountId": "<AWSアカウントID>",
+        "eventCategory": "Management"
+    }
+}
+{
+    "version": "0",
+    "id": "24d3bb7f-cb05-21f5-e1a2-0be711ce5f30",
+    "detail-type": "Network Manager Routing Update",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:46:51Z",
+    "region": "us-west-2",
+    "resources": [
+        "arn:aws:networkmanager::<AWSアカウントID>:global-network/global-network-05154a9df58172f73",
+        "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    ],
+    "detail": {
+        "changeType": "SEGMENT_ROUTE_UNINSTALLED",
+        "changeDescription": "Routes in one or more Segments have been uninstalled.",
+        "edgeLocation": "ap-northeast-1",
+        "segments": [
+            "workload"
+        ],
+        "routes": [
+            {
+                "destinationCidrBlock": "10.1.0.0/16",
+                "attachments": [],
+                "routeType": "route_static",
+                "routeState": "blackhole"
+            }
+        ],
+        "coreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    }
+}
+{
+    "version": "0",
+    "id": "f166c379-e4a9-1f7e-15c5-0a8afb185b59",
+    "detail-type": "Network Manager Routing Update",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:46:54Z",
+    "region": "us-west-2",
+    "resources": [
+        "arn:aws:networkmanager::<AWSアカウントID>:global-network/global-network-05154a9df58172f73",
+        "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    ],
+    "detail": {
+        "changeType": "SEGMENT_ROUTE_UNINSTALLED",
+        "changeDescription": "Routes in one or more Segments have been uninstalled.",
+        "edgeLocation": "ap-southeast-1",
+        "segments": [
+            "workload"
+        ],
+        "routes": [
+            {
+                "destinationCidrBlock": "10.1.0.0/16",
+                "attachments": [],
+                "routeType": "route_static",
+                "routeState": "blackhole"
+            }
+        ],
+        "coreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    }
+}
+{
+    "version": "0",
+    "id": "45006663-955b-c5b3-94ef-7e22b0041ea5",
+    "detail-type": "Network Manager Routing Update",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:47:00Z",
+    "region": "us-west-2",
+    "resources": [
+        "arn:aws:networkmanager::<AWSアカウントID>:global-network/global-network-05154a9df58172f73",
+        "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    ],
+    "detail": {
+        "changeType": "SEGMENT_ROUTE_UNINSTALLED",
+        "changeDescription": "Routes in one or more Segments have been uninstalled.",
+        "edgeLocation": "us-west-2",
+        "segments": [
+            "workload"
+        ],
+        "routes": [
+            {
+                "destinationCidrBlock": "10.1.0.0/16",
+                "attachments": [],
+                "routeType": "route_static",
+                "routeState": "blackhole"
+            }
+        ],
+        "coreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    }
+}
+{
+    "version": "0",
+    "id": "8cec3185-b246-a2fe-6df8-0039de35fbdb",
+    "detail-type": "Network Manager Routing Update",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:47:03Z",
+    "region": "us-west-2",
+    "resources": [
+        "arn:aws:networkmanager::<AWSアカウントID>:global-network/global-network-05154a9df58172f73",
+        "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    ],
+    "detail": {
+        "changeType": "SEGMENT_ROUTE_UNINSTALLED",
+        "changeDescription": "Routes in one or more Segments have been uninstalled.",
+        "edgeLocation": "ap-northeast-3",
+        "segments": [
+            "workload"
+        ],
+        "routes": [
+            {
+                "destinationCidrBlock": "10.1.0.0/16",
+                "attachments": [],
+                "routeType": "route_static",
+                "routeState": "blackhole"
+            }
+        ],
+        "coreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    }
+}
+{
+    "version": "0",
+    "id": "7d7df99d-dc80-02f1-bf5a-b30e11142487",
+    "detail-type": "Network Manager Topology Change",
+    "source": "aws.networkmanager",
+    "account": "<AWSアカウントID>",
+    "time": "2026-06-15T04:47:43Z",
+    "region": "us-west-2",
+    "resources": [
+        "arn:aws:networkmanager::<AWSアカウントID>:global-network/global-network-05154a9df58172f73",
+        "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    ],
+    "detail": {
+        "changeType": "VPC_ATTACHMENT_DELETED",
+        "changeDescription": "A VPC attachment has been deleted for a Core Network.",
+        "edgeLocation": "us-east-1",
+        "attachmentArn": "arn:aws:networkmanager::<AWSアカウントID>:attachment/attachment-03448a70834da5ec2",
+        "vpcArn": "arn:aws:ec2:us-east-1:<AWSアカウントID>:vpc/vpc-0f4a5b2a1386863a2",
+        "coreNetworkArn": "arn:aws:networkmanager::<AWSアカウントID>:core-network/core-network-03d07918f18f4ef31"
+    }
+}

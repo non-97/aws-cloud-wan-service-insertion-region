@@ -1,0 +1,131 @@
+{
+  "core-network-configuration": {
+    "asn-ranges": [
+      "64512-64555"
+    ],
+    "edge-locations": [
+      {
+        "location": "us-east-1",
+        "asn": 64512
+      },
+      {
+        "location": "us-west-2",
+        "asn": 64513
+      },
+      {
+        "location": "ap-northeast-1",
+        "asn": 64514
+      },
+      {
+        "location": "ap-northeast-3",
+        "asn": 64515
+      },
+      {
+        "location": "ap-southeast-1",
+        "asn": 64516
+      }
+    ]
+  },
+  "version": "2025.11",
+  "attachment-policies": [
+    {
+      "rule-number": 100,
+      "condition-logic": "or",
+      "description": "attach workload segment by tag",
+      "action": {
+        "association-method": "constant",
+        "segment": "workload"
+      },
+      "conditions": [
+        {
+          "type": "tag-value",
+          "value": "workload",
+          "operator": "equals",
+          "key": "cloudwan-seg"
+        }
+      ]
+    },
+    {
+      "rule-number": 200,
+      "condition-logic": "or",
+      "description": "add to inspection NFG by tag",
+      "action": {
+        "add-to-network-function-group": "inspection"
+      },
+      "conditions": [
+        {
+          "type": "tag-value",
+          "value": "inspection",
+          "operator": "equals",
+          "key": "cloudwan-nfg"
+        }
+      ]
+    }
+  ],
+  "network-function-groups": [
+    {
+      "name": "inspection",
+      "require-attachment-acceptance": false
+    }
+  ],
+  "segments": [
+    {
+      "isolate-attachments": false,
+      "name": "workload",
+      "require-attachment-acceptance": false,
+      "edge-locations": [
+        "us-east-1",
+        "us-west-2",
+        "ap-northeast-1",
+        "ap-northeast-3",
+        "ap-southeast-1"
+      ]
+    }
+  ],
+  "segment-actions": [
+    {
+      "segment": "workload",
+      "action": "send-to",
+      "via": {
+        "with-edge-overrides": [
+          {
+            "edge-sets": [
+              [
+                "us-west-2"
+              ]
+            ],
+            "use-edge-location": "ap-northeast-1"
+          }
+        ],
+        "network-function-groups": [
+          "inspection"
+        ]
+      }
+    },
+    {
+      "mode": "single-hop",
+      "when-sent-to": {
+        "segments": [
+          "workload"
+        ]
+      },
+      "segment": "workload",
+      "action": "send-via",
+      "via": {
+        "with-edge-overrides": [
+          {
+            "edge-sets": [
+              [
+                "us-west-2"
+              ]
+            ],
+            "use-edge-location": "ap-northeast-1"
+          }
+        ],
+        "network-function-groups": [
+          "inspection"
+        ]
+      }
+    }
+  ]
+}

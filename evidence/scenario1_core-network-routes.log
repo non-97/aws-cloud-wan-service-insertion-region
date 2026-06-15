@@ -1,0 +1,260 @@
+> bash scripts/get-fib.sh
+CoreNetwork=core-network-03d07918f18f4ef31  GlobalNetwork=global-network-05154a9df58172f73  (NM_REGION=us-west-2)
+
+===== attachment 凡例 =====
+ATTACHMENT                    REGION          ROLE
+attachment-02e92b7a39297e514  ap-northeast-1  INSPECTION
+attachment-09b82a645ca471297  ap-northeast-1  workload
+attachment-0723a3b075aab0399  ap-northeast-3  INSPECTION
+attachment-0ef0d2904c0e25e45  ap-northeast-3  workload
+attachment-0782c2dcc6c92312e  ap-southeast-1  workload
+attachment-0ad7aed3c07d2d8d8  us-east-1       workload
+attachment-03448a70834da5ec2  us-east-1       INSPECTION
+attachment-08b9c64c4e72551b7  us-west-2       workload
+
+===== SEGMENT=workload  EDGE=us-east-1 =====
+CIDR               TYPE        STATE   NEXT-HOP              ATTACHMENT
+0.0.0.0/0          STATIC      ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+0: 0: 0: 0: 0: 0: 0: 0/0  STATIC      ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+10.1.0.0/16        PROPAGATED  ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+10.11.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+10.21.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+10.31.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+10.41.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION  attachment-03448a70834da5ec2
+
+===== SEGMENT=workload  EDGE=us-west-2 =====
+CIDR               TYPE        STATE   NEXT-HOP                   ATTACHMENT
+10.31.0.0/16       PROPAGATED  ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+0.0.0.0/0          STATIC      ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+0: 0: 0: 0: 0: 0: 0: 0/0  STATIC      ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.1.0.0/16        PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.11.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.41.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.21.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+
+===== SEGMENT=workload  EDGE=ap-northeast-1 =====
+CIDR               TYPE        STATE   NEXT-HOP                   ATTACHMENT
+0.0.0.0/0          STATIC      ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+0: 0: 0: 0: 0: 0: 0: 0/0  STATIC      ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.11.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.21.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.31.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.41.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.1.0.0/16        PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+
+===== SEGMENT=workload  EDGE=ap-northeast-3 =====
+CIDR               TYPE        STATE   NEXT-HOP                   ATTACHMENT
+0.0.0.0/0          STATIC      ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+0: 0: 0: 0: 0: 0: 0: 0/0  STATIC      ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+10.11.0.0/16       PROPAGATED  ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+10.31.0.0/16       PROPAGATED  ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+10.41.0.0/16       PROPAGATED  ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+10.1.0.0/16        PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.21.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+
+===== SEGMENT=workload  EDGE=ap-southeast-1 =====
+CIDR               TYPE        STATE   NEXT-HOP                   ATTACHMENT
+0.0.0.0/0          STATIC      ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+0: 0: 0: 0: 0: 0: 0: 0/0  STATIC      ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.1.0.0/16        PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.11.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.41.0.0/16       PROPAGATED  ACTIVE  us-east-1/INSPECTION       attachment-03448a70834da5ec2
+10.21.0.0/16       PROPAGATED  ACTIVE  ap-northeast-1/INSPECTION  attachment-02e92b7a39297e514
+10.31.0.0/16       PROPAGATED  ACTIVE  ap-northeast-3/INSPECTION  attachment-0723a3b075aab0399
+
+===== NFG=inspection  EDGE=us-east-1 =====
+CIDR          TYPE        STATE   NEXT-HOP                       ATTACHMENT
+10.1.0.0/16   PROPAGATED  ACTIVE  us-east-1/workload             attachment-0ad7aed3c07d2d8d8
+10.31.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-northeast-3  -
+10.11.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@us-west-2       -
+10.41.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-southeast-1  -
+10.21.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-northeast-1  -
+
+===== NFG=inspection  EDGE=ap-northeast-1 =====
+CIDR          TYPE        STATE   NEXT-HOP                       ATTACHMENT
+10.21.0.0/16  PROPAGATED  ACTIVE  ap-northeast-1/workload        attachment-09b82a645ca471297
+10.41.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-southeast-1  -
+10.11.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@us-west-2       -
+10.1.0.0/16   PROPAGATED  ACTIVE  NFG:inspection@us-east-1       -
+10.31.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-northeast-3  -
+
+===== NFG=inspection  EDGE=ap-northeast-3 =====
+CIDR          TYPE        STATE   NEXT-HOP                       ATTACHMENT
+10.31.0.0/16  PROPAGATED  ACTIVE  ap-northeast-3/workload        attachment-0ef0d2904c0e25e45
+10.1.0.0/16   PROPAGATED  ACTIVE  NFG:inspection@us-east-1       -
+10.21.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-northeast-1  -
+10.11.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@us-west-2       -
+10.41.0.0/16  PROPAGATED  ACTIVE  NFG:inspection@ap-southeast-1  -
+
+> bash scripts/get-rib.sh
+CoreNetwork=core-network-03d07918f18f4ef31  (NM_REGION=us-west-2)
+===== RIB  SEGMENT=workload  EDGE=us-east-1 =====
+-----------------------------------------------------------------------------------------------------------------
+|                                       ListCoreNetworkRoutingInformation                                       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|   AsPath    |  Comm    |      Edge       | LocalPref  |  Med  |      Prefix        |    Seg     |    Type     |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|             |          |  None           |  None      |  None |  10.1.0.0/16       |  None      |  vpc        |
+|             |          |  None           |  None      |  None |  0.0.0.0/0         |  None      |  blackhole  |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64515 64513|  64513: 1 |  ap-northeast-3 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64515 64514|  64514: 1 |  ap-northeast-3 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64515      |  64515: 1 |  ap-northeast-3 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64515 64516|  64516: 1 |  ap-northeast-3 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|             |          |  None           |  None      |  None |  0: 0: 0: 0: 0: 0: 0: 0/0 |  None      |  blackhole  |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64514 64513|  64513: 1 |  ap-northeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64514      |  64514: 1 |  ap-northeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64514 64515|  64515: 1 |  ap-northeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64514 64516|  64516: 1 |  ap-northeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64516 64513|  64513: 1 |  ap-southeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64516 64514|  64514: 1 |  ap-southeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64516 64515|  64515: 1 |  ap-southeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64516      |  64516: 1 |  ap-southeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64513      |  64513: 1 |  us-west-2      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64513 64514|  64514: 1 |  us-west-2      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64513 64515|  64515: 1 |  us-west-2      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64513 64516|  64516: 1 |  us-west-2      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+===== RIB  SEGMENT=workload  EDGE=us-west-2 =====
+-----------------------------------------------------------------------------------------------------------------
+|                                       ListCoreNetworkRoutingInformation                                       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|   AsPath    |  Comm    |      Edge       | LocalPref  |  Med  |      Prefix        |    Seg     |    Type     |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|             |          |  None           |  None      |  None |  10.11.0.0/16      |  None      |  vpc        |
+|             |          |  None           |  None      |  None |  0.0.0.0/0         |  None      |  blackhole  |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64515 64512|  64512: 1 |  ap-northeast-3 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64515 64514|  64514: 1 |  ap-northeast-3 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64515      |  64515: 1 |  ap-northeast-3 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64515 64516|  64516: 1 |  ap-northeast-3 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|             |          |  None           |  None      |  None |  0: 0: 0: 0: 0: 0: 0: 0/0 |  None      |  blackhole  |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64516 64512|  64512: 1 |  ap-southeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64516 64514|  64514: 1 |  ap-southeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64516 64515|  64515: 1 |  ap-southeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64516      |  64516: 1 |  ap-southeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64514 64512|  64512: 1 |  ap-northeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64514      |  64514: 1 |  ap-northeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64514 64515|  64515: 1 |  ap-northeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64514 64516|  64516: 1 |  ap-northeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64512      |  64512: 1 |  us-east-1      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64512 64514|  64514: 1 |  us-east-1      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64512 64515|  64515: 1 |  us-east-1      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64512 64516|  64516: 1 |  us-east-1      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+===== RIB  SEGMENT=workload  EDGE=ap-northeast-1 =====
+-----------------------------------------------------------------------------------------------------------------
+|                                       ListCoreNetworkRoutingInformation                                       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|   AsPath    |  Comm    |      Edge       | LocalPref  |  Med  |      Prefix        |    Seg     |    Type     |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|             |          |  None           |  None      |  None |  10.21.0.0/16      |  None      |  vpc        |
+|             |          |  None           |  None      |  None |  0.0.0.0/0         |  None      |  blackhole  |
+|  64512      |          |  us-east-1      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64512      |  64512: 1 |  us-east-1      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64512 64513|  64513: 1 |  us-east-1      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64512 64515|  64515: 1 |  us-east-1      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64512 64516|  64516: 1 |  us-east-1      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|             |          |  None           |  None      |  None |  0: 0: 0: 0: 0: 0: 0: 0/0 |  None      |  blackhole  |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64516 64512|  64512: 1 |  ap-southeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64516 64513|  64513: 1 |  ap-southeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64516 64515|  64515: 1 |  ap-southeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64516      |  64516: 1 |  ap-southeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64515 64512|  64512: 1 |  ap-northeast-3 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64515 64513|  64513: 1 |  ap-northeast-3 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64515      |  64515: 1 |  ap-northeast-3 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64515 64516|  64516: 1 |  ap-northeast-3 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64513 64512|  64512: 1 |  us-west-2      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64513      |  64513: 1 |  us-west-2      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64513 64515|  64515: 1 |  us-west-2      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64513 64516|  64516: 1 |  us-west-2      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+===== RIB  SEGMENT=workload  EDGE=ap-northeast-3 =====
+-----------------------------------------------------------------------------------------------------------------
+|                                       ListCoreNetworkRoutingInformation                                       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|   AsPath    |  Comm    |      Edge       | LocalPref  |  Med  |      Prefix        |    Seg     |    Type     |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|             |          |  None           |  None      |  None |  10.31.0.0/16      |  None      |  vpc        |
+|             |          |  None           |  None      |  None |  0.0.0.0/0         |  None      |  blackhole  |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64516      |          |  ap-southeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64516 64512|  64512: 1 |  ap-southeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64516 64513|  64513: 1 |  ap-southeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64516 64514|  64514: 1 |  ap-southeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64516      |  64516: 1 |  ap-southeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|             |          |  None           |  None      |  None |  0: 0: 0: 0: 0: 0: 0: 0/0 |  None      |  blackhole  |
+|  64512      |          |  us-east-1      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64512      |  64512: 1 |  us-east-1      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64512 64513|  64513: 1 |  us-east-1      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64512 64514|  64514: 1 |  us-east-1      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64512 64516|  64516: 1 |  us-east-1      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64513 64512|  64512: 1 |  us-west-2      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64513      |  64513: 1 |  us-west-2      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64513 64514|  64514: 1 |  us-west-2      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64513 64516|  64516: 1 |  us-west-2      |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64514 64512|  64512: 1 |  ap-northeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64514 64513|  64513: 1 |  ap-northeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64514      |  64514: 1 |  ap-northeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64514 64516|  64516: 1 |  ap-northeast-1 |  0         |  100  |  10.41.0.0/16      |  workload  |  None       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+===== RIB  SEGMENT=workload  EDGE=ap-southeast-1 =====
+-----------------------------------------------------------------------------------------------------------------
+|                                       ListCoreNetworkRoutingInformation                                       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|   AsPath    |  Comm    |      Edge       | LocalPref  |  Med  |      Prefix        |    Seg     |    Type     |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
+|             |          |  None           |  None      |  None |  10.41.0.0/16      |  None      |  vpc        |
+|             |          |  None           |  None      |  None |  0.0.0.0/0         |  None      |  blackhole  |
+|  64513      |          |  us-west-2      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64513      |          |  us-west-2      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64513 64512|  64512: 1 |  us-west-2      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64513      |  64513: 1 |  us-west-2      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64513 64514|  64514: 1 |  us-west-2      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64513 64515|  64515: 1 |  us-west-2      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|             |          |  None           |  None      |  None |  0: 0: 0: 0: 0: 0: 0: 0/0 |  None      |  blackhole  |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64515      |          |  ap-northeast-3 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64515 64512|  64512: 1 |  ap-northeast-3 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64515 64513|  64513: 1 |  ap-northeast-3 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64515 64514|  64514: 1 |  ap-northeast-3 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64515      |  64515: 1 |  ap-northeast-3 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64512      |          |  us-east-1      |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64512      |  64512: 1 |  us-east-1      |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64512 64513|  64513: 1 |  us-east-1      |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64512 64514|  64514: 1 |  us-east-1      |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64512 64515|  64515: 1 |  us-east-1      |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0.0.0.0/0         |  workload  |  None       |
+|  64514      |          |  ap-northeast-1 |  0         |  100  |  0: 0: 0: 0: 0: 0: 0: 0/0 |  workload  |  None       |
+|  64514 64512|  64512: 1 |  ap-northeast-1 |  0         |  100  |  10.1.0.0/16       |  workload  |  None       |
+|  64514 64513|  64513: 1 |  ap-northeast-1 |  0         |  100  |  10.11.0.0/16      |  workload  |  None       |
+|  64514      |  64514: 1 |  ap-northeast-1 |  0         |  100  |  10.21.0.0/16      |  workload  |  None       |
+|  64514 64515|  64515: 1 |  ap-northeast-1 |  0         |  100  |  10.31.0.0/16      |  workload  |  None       |
++-------------+----------+-----------------+------------+-------+--------------------+------------+-------------+
